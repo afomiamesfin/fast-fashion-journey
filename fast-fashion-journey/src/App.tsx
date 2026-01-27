@@ -102,9 +102,21 @@ const content = {
     ]
   },
   conclusion: {
-    title: "The Question Remains",
-    body: "Fast fashion is both everywhere and invisible. While many know it represents an environmental catastrophe and human rights crisis, the mainstream solution of 'ethical consumption' is itself a privileged position that ignores economic realities.\n\nReal change means dismantling the system that funds exploitation, not shaming individuals trapped by it.\n\nHow can individual consumers afford to care? Can the system itself transform?"
+    title: "So, What Now?",
+    body: "Fast fashion is both everywhere and invisible...",
+    stats: {
+      clothingDiscarded: 0.73, // tons per minute globally
+      waterUsed: 2700, // liters per t-shirt
+      workers: 75000000, // global garment workers
+    } 
   }
+};
+
+// ============ SOUND HELPER FUNCTION =======
+const playSound = (soundName: string) => {
+  const audio = new Audio(`/sounds/${soundName}.mp3`);
+  audio.volume = 0.3;
+  audio.play().catch(() => {}); // Silently fail if sound doesn't exist
 };
 
 // ============= TYPES =============
@@ -163,6 +175,7 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
     if (!gameActive) return;
 
     const handleKeyPress = (e: { key: string; }) => {
+      playSound('woosh');
       const speed = 5;
       setPlayerPos((prev: { x: number; y: number; }) => {
         let newX = prev.x;
@@ -258,12 +271,11 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
             <h2>{selectedPath.label}</h2>
           </div>
 
-          <div className="facts-grid">
-            {selectedPath.facts.map((fact: string, i: number) => (
-              <Card key={i} className="fact-card retro-card">
-                <div className="fact-number">#{i + 1}</div>
-                <p>{fact}</p>
-              </Card>
+          <div className="notepad-container">
+            {selectedPath.facts.map((fact: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, i: Key | null | undefined) => (
+              <div key={i} className="notepad-item">
+                • {fact}
+              </div>
             ))}
           </div>
 
@@ -272,7 +284,7 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
               ← Choose Another Fate
             </Button>
             <Button onClick={onComplete} className="main-btn">
-              But how did this begin? →
+              Let's rewind... →
             </Button>
           </div>
         </div>
@@ -372,6 +384,7 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
   }, [clicks, target]);
 
   const handleClick = () => {
+    playSound('click');
     if (!gameOver) {
       setClicks(prev => prev + 1);
       if (clicks % 15 === 0) {
@@ -407,7 +420,7 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
           <div className="nav-buttons">
             <Button onClick={onBack} variant="outline" className="retro-btn-outline">← Back</Button>
             <Button onClick={onComplete} className="main-btn">
-              Who bears the cost? →
+              The real price tag... →
             </Button>
           </div>
         </div>
@@ -495,7 +508,7 @@ function StudentDilemma({ onComplete, onBack }: StudentDilemmaProps) {
               </div>
               {item.price > budget && (
                 <div className="unaffordable-overlay">
-                  CAN'T AFFORD
+                  OUT OF BUDGET
                 </div>
               )}
             </Card>
@@ -519,11 +532,36 @@ function StudentDilemma({ onComplete, onBack }: StudentDilemmaProps) {
   );
 }
 
-function Conclusion({ onBack }: ConclusionProps) {
+function Conclusion({ onBack }: { onBack: () => void }) {
+  const [timeSpent, setTimeSpent] = useState(0);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      setTimeSpent(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const clothingWasted = (timeSpent / 60 * content.conclusion.stats.clothingDiscarded).toFixed(2);
+
   return (
     <div className="screen">
       <div className="content-box conclusion-box">
         <h2 className="conclusion-title">{content.conclusion.title}</h2>
+        
+        <div className="stats-display">
+          <h3>While You Were Here...</h3>
+          <div className="stat-item">
+            <div className="stat-value">{clothingWasted}</div>
+            <div className="stat-label">tons of clothing were discarded globally</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">{timeSpent}</div>
+            <div className="stat-label">seconds you spent learning</div>
+          </div>
+        </div>
+
         <p className="final-text">{content.conclusion.body}</p>
         
         <div className="credits">
@@ -532,7 +570,9 @@ function Conclusion({ onBack }: ConclusionProps) {
           <p className="small">WRIT 1301 - Mode Change Project</p>
         </div>
 
-        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← Back to Start</Button>
+        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">
+          ← Back to Start
+        </Button>
       </div>
     </div>
   );
@@ -541,13 +581,35 @@ function Conclusion({ onBack }: ConclusionProps) {
 // ============= MAIN APP =============
 
 export default function App() {
-  const [stage, setStage] = useState<number>(0);
+  const [stage, setStage] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const goToStage = (n: SetStateAction<number>) => setStage(n);
+  const goToStage = (n: number) => {
+    playSound('transition');
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setStage(n);
+      setIsTransitioning(false);
+    }, 400);
+  };
 
   return (
     <div className="app">
+
+      <div className="progress-tracker">
+        <div className="progress-tracker-fill" style={{ width: `${(stage / 4) * 100}%` }} />
+      </div>
+      <div className="progress-steps">
+        {[0, 1, 2, 3, 4].map((s) => (
+          <div 
+            key={s} 
+            className={`progress-step ${s < stage ? 'completed' : ''} ${s === stage ? 'active' : ''}`}
+          />
+        ))}
+      </div>
+
       <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
         * {
           margin: 0;
           padding: 0;
@@ -557,8 +619,7 @@ export default function App() {
         body {
           background: #f4f1ea;
           color: #1a1a1a;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-          line-height: 1.6;
+          font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
         }
 
         .app {
@@ -588,11 +649,90 @@ export default function App() {
           to { opacity: 1; transform: translateY(0); }
         }
 
+        // code to make fading work
+        .screen {
+          width: 100%;
+          max-width: 1000px;
+          animation: slideInRight 0.6s ease-out;
+        }
+
+        @keyframes slideInRight {
+          from { 
+            opacity: 0; 
+            transform: translateX(100px);
+          }
+          to { 
+            opacity: 1; 
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideOutLeft {
+          from { 
+            opacity: 1; 
+            transform: translateX(0);
+          }
+          to { 
+            opacity: 0; 
+            transform: translateX(-100px);
+          }
+        }
+
+        .screen.exiting {
+          animation: slideOutLeft 0.4s ease-in forwards;
+        }
+        // end of fade code
+
+        .progress-tracker {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 6px;
+          background: #e0e0e0;
+          z-index: 1000;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-tracker-fill {
+          height: 100%;
+          background: #2d6a4f;
+          transition: width 0.5s ease;
+        }
+
+        .progress-steps {
+          position: fixed;
+          top: 10px;
+          right: 20px;
+          display: flex;
+          gap: 10px;
+          z-index: 1000;
+        }
+
+        .progress-step {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #e0e0e0;
+          border: 2px solid #2d2d2d;
+          transition: all 0.3s;
+        }
+
+        .progress-step.completed {
+          background: #2d6a4f;
+        }
+
+        .progress-step.active {
+          background: #52b788;
+          transform: scale(1.3);
+        }
+
         .content-box {
           background: white;
           border: 3px solid #2d2d2d;
           padding: 40px;
-          box-shadow: 8px 8px 0 rgba(45, 45, 45, 0.1);
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .conclusion-box {
@@ -676,10 +816,11 @@ export default function App() {
         }
 
         .retro-btn-outline {
-          border: 2px dashed #2d2d2d;
+          border: 2px solid #2d2d2d;
           background: transparent;
           color: #2d2d2d;
-        }
+          border-radius: 8px;
+        } 
 
         .retro-btn-outline:hover {
           background: #f0f0f0;
@@ -702,6 +843,7 @@ export default function App() {
           padding: 20px;
           background: #fafafa;
           border: 2px dashed #52b788;
+          border-radius: 12px;
         }
 
         .timer-badge {
@@ -803,30 +945,39 @@ export default function App() {
         }
 
         .fact-card {
-          padding: 20px;
-          position: relative;
-          transition: transform 0.2s;
-          background: white;
-        }
+        padding: 20px;
+        position: relative;
+        transition: transform 0.2s;
+        background: white;
+        border: 2px dashed #d0d0d0 !important;
+        border-radius: 12px;
+      }
 
         .fact-card:hover {
           transform: translateX(3px);
         }
 
-        .fact-number {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: #2d6a4f;
-          color: white;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 0.9rem;
+        // notepad styles
+        .notepad-container {
+          background: #fff9e6;
+          border: 1px solid #d4af37;
+          border-radius: 4px;
+          padding: 30px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          background-image: repeating-linear-gradient(
+            transparent,
+            transparent 31px,
+            #d4af37 31px,
+            #d4af37 32px
+          );
+          line-height: 32px;
+          font-family: 'Courier New', monospace;
+        }
+
+        .notepad-item {
+          padding-left: 20px;
+          margin-bottom: 10px;
+          font-size: 1.05rem;
         }
 
         .clicker-game {
@@ -1024,10 +1175,10 @@ export default function App() {
           box-shadow: 6px 6px 0 rgba(45, 45, 45, 0.15);
         }
 
-.shop-card.selected {
-  border: 3px solid #2d6a4f !important;
-  background: #f0fdf4;
-}
+        .shop-card.selected {
+          border: 3px solid #2d6a4f !important;
+          background: #f0fdf4;
+        }
 
         .shop-card.unaffordable {
           opacity: 0.5;
@@ -1125,6 +1276,36 @@ export default function App() {
           .game-arena { height: 350px; }
           .clicker-button { padding: 20px 40px; font-size: 1.2rem; }
           .player { font-size: 3rem; }
+        }
+
+        .stats-display {
+          background: #2d6a4f;
+          color: white;
+          padding: 30px;
+          border-radius: 12px;
+          margin: 30px 0;
+          text-align: center;
+        }
+
+        .stats-display h3 {
+          color: white;
+          margin-bottom: 20px;
+          font-size: 1.5rem;
+        }
+
+        .stat-item {
+          margin: 20px 0;
+        }
+
+        .stat-value {
+          font-size: 3rem;
+          font-weight: bold;
+          color: #95d5b2;
+        }
+
+        .stat-label {
+          font-size: 1rem;
+          opacity: 0.9;
         }
       `}</style>
 
