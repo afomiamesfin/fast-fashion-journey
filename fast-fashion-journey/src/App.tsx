@@ -12,8 +12,8 @@ import everlaneSweater from './assets/images/everlane-sweater.png';
 // ============= DATA =============
 const content = {
   intro: {
-    title: "Fast Fashion Journey",
-    description: "Experience the lifecycle of clothing from three perspectives: garment, worker, and consumer."
+    title: "Fast Fashion",
+    description: "The lifecycle of clothing from three perspectives: garment, worker, and consumer."
   },
   clothing: {
     intro: "Scenario 1: You're a t-shirt, and you've just been sorted into the 'Don't want' pile of your human's Spring closet cleanout.",
@@ -129,7 +129,6 @@ function IntroScreen({ onStart }: IntroScreenProps) {
   return (
     <div className="screen intro-screen">
       <div className="content-box">
-        <div className="icon-large">👕</div>
         <h1>{content.intro.title}</h1>
         <p className="intro-text">{content.intro.description}</p>
         <Button onClick={onStart} className="main-btn" size="lg">
@@ -652,7 +651,7 @@ function Conclusion({ onBack, startTime }: { onBack: () => void; startTime: numb
               <p><strong>♻️ Buy secondhand</strong> when possible. Every thrifted / recovered item expands the global lifespan of clothing.</p>
             </div>
             <div className="action-item">
-              <p><strong>📢 Demand change</strong> from policymakers. Join local events to raise awareness towards these issues.</p>
+              <p><strong>📢 Speak up about change</strong> from policymakers. Join local events to raise awareness towards these issues.</p>
             </div>
             <div className="action-item">
             </div>
@@ -878,7 +877,7 @@ export default function App() {
         }
 
         .intro-text {
-          font-size: 1.1rem;
+          font-size: 2rem;
           color: #555;
           margin-bottom: 30px;
           text-align: center;
