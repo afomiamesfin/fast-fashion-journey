@@ -2,108 +2,87 @@ import { useState, useEffect, type JSXElementConstructor, type Key, type ReactEl
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+import atacamaImg from './assets/images/atacama.jpg';
+import thriftImg from './assets/images/thrift.jpg';
+import factoryImg from './assets/images/wasteplant.jpg';
+import workerImg from './assets/images/factory.jpg';
+import ciderSweater from './assets/images/cider-sweater.png';
+import everlaneSweater from './assets/images/everlane-sweater.png';
+
 // ============= DATA =============
 const content = {
   intro: {
-    title: "Threads of Impact",
-    subtitle: "A journey through the hidden costs of fast fashion",
-    description: "Experience the lifecycle of clothing from three perspectives: the garment, the worker, and the consumer."
+    title: "Fast Fashion Journey",
+    description: "Experience the lifecycle of clothing from three perspectives: garment, worker, and consumer."
   },
   clothing: {
-    intro: "It's 10AM. You're a sweater, just sorted into the 'Don't want' pile of your human's 5th closet cleanout this year.",
+    intro: "Scenario 1: You're a t-shirt, and you've just been sorted into the 'Don't want' pile of your human's Spring closet cleanout.",
     game: {
-      instruction: "Dodge the hands trying to throw you away! Use arrow keys or WASD to move.",
+      instruction: "dodge the hands trying to throw you away! use arrow keys / WASD to move.",
       duration: 15
     },
     choices: [
       {
         id: 'landfill',
-        label: '🗑️ To the landfill',
+        label: 'ᯓ➤ to the landfill',
         color: '#8B4513',
         image: '🏜️',
+        bgImage: atacamaImg,
         facts: [
-          '80 lbs of clothing thrown away per American yearly',
-          'Synthetic fibers take 200+ years to decompose',
-          'Releases methane gas while decomposing',
-          'Atacama Desert: a dumping ground visible from space'
+          '➺  In America, the average person throws away 80 lbs of clothing each year.',
+          '➺  Synthetic fibers (like polyester, nylon, and spandex) take 200+ years to decompose.',
+          '➺  Clothing releases methane gas during the decomposition process.',
+          '➺  IMG ABOVE: The Atacama Desert in Chile has become a fast-fashion dumping ground visible from space.'
         ]
       },
       {
         id: 'donation',
-        label: '👕 Donated to thrift store',
+        label: 'ᯓ➤ donated to thrift store',
         color: '#4A90E2',
         image: '🏪',
+        bgImage: thriftImg,
         facts: [
-          'Only 20% of donations are resold locally',
-          'Rest shipped overseas or to landfills',
-          'Resellers raid thrift stores, driving up prices',
-          'Once affordable, now inaccessible'
+          '➺  Only 20% of donations are resold locally...',
+          '➺  ... because the rest ends up shipped overseas or to landfills.',
+          '➺  More recently, thrift store prices have reporteldy been inflated by dedicated resellers from sites like Depop.',
         ]
       },
       {
         id: 'incineration',
-        label: '🔥 Waste-to-energy plant',
+        label: 'ᯓ➤ waste-to-energy plant',
         color: '#E74C3C',
         image: '🏭',
+        bgImage: factoryImg,
         facts: [
-          'Burned to generate electricity',
-          'Releases harmful toxins into communities',
-          'Disproportionately affects low-income areas',
-          'Energy produced barely offsets environmental cost'
+          '➺  At waste to energy plants, items like clothes are burned to generate electricity.',
+          '➺  While renewable energy is a huge step towards fully sustainable communities, this process can release harmful toxins into communities.',
+          '➺  This damage disproportioately affects low-income areas.',
+          '➺  Overall, the energy produced barely offsets the environmental cost of the process itself.'
         ]
       }
     ]
   },
   worker: {
-    intro: "It's 6AM in Malaysia. You're a factory worker at the sweatshop nearby.",
+    intro: "Scenario 2: It's 6AM in Ipoh, Malaysia. You're a factory worker at Imperial Garments, which sources clothign for brands like L.L. Bean and Levi's.",
+    bgImage: workerImg,
     clicker: {
       target: 150,
       timeLimit: 30,
-      wage: '$3/day',
+      wage: '$3 USD /day',
       facts: [
-        '50-200 products per hour required',
-        '13-hour shifts are standard',
-        'No insurance, PTO, or retirement',
-        'Children as young as 5 work in some facilities',
-        '2013 Rana Plaza: 1,100 workers killed',
-        'COVID-19: millions left unpaid when orders cancelled'
+        'Many of these factories are located in countries with weak labor laws and even weaker enforcement, making it difficult for workers to advocate for better conditions.',
+        'The standard workday consists of 13-hour shifts.',
+        'Very few locations include any form of insurance, PTO, or retirement planning / guarantees.',
+        'Based on International Labor Organization reports, children as young as 5 continue to work in some facilities.',
+        'The 2013 collapse of commercial center "Rana Plaza," which led to the death of over 1,100 workers killed, was a major turning point in the Bangladesh garment industry and led to widespread global protests.',
       ]
     }
   },
   student: {
-    intro: "It's 2AM. You're a college student with 2 jobs, burnt out, trying to pay off loans.",
+    intro: "Scenario 3: You're a burnt out college student with 2 jobs, trying to stay out of debt but desparately in need of new clothing. Let's look at some of your options:",
     budget: 20,
-    items: [
-      {
-        name: 'Fast Fashion Shirt',
-        price: 5,
-        durability: 'Low (10 wears)',
-        impact: 'High waste, worker exploitation',
-        color: '#FF6B6B',
-        emoji: '👚'
-      },
-      {
-        name: 'Sustainable Brand',
-        price: 45,
-        durability: 'High (200+ wears)',
-        impact: 'Low waste, fair wages',
-        color: '#51CF66',
-        emoji: '🌿'
-      },
-      {
-        name: 'Thrift Store Find',
-        price: 8,
-        durability: 'Medium (50 wears)',
-        impact: 'Lowest waste',
-        color: '#4DABF7',
-        emoji: '♻️',
-        note: 'But resellers are driving prices up...'
-      }
-    ]
   },
   conclusion: {
-    title: "So, What Now?",
-    body: "Fast fashion is both everywhere and invisible...",
     stats: {
       clothingDiscarded: 0.73, // tons per minute globally
       waterUsed: 2700, // liters per t-shirt
@@ -152,10 +131,9 @@ function IntroScreen({ onStart }: IntroScreenProps) {
       <div className="content-box">
         <div className="icon-large">👕</div>
         <h1>{content.intro.title}</h1>
-        <h2>{content.intro.subtitle}</h2>
         <p className="intro-text">{content.intro.description}</p>
         <Button onClick={onStart} className="main-btn" size="lg">
-          Begin Journey →
+          begin! →
         </Button>
       </div>
     </div>
@@ -195,22 +173,30 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
   }, [gameActive]);
 
   useEffect(() => {
-    if (!gameActive) return;
+  if (!gameActive) return;
 
-    const spawnHand = setInterval(() => {
-      const side = Math.floor(Math.random() * 4);
-      let x, y, dx, dy;
-      
-      if (side === 0) { x = Math.random() * 100; y = -10; dx = 0; dy = 2; }
-      else if (side === 1) { x = 110; y = Math.random() * 100; dx = -2; dy = 0; }
-      else if (side === 2) { x = Math.random() * 100; y = 110; dx = 0; dy = -2; }
-      else { x = -10; y = Math.random() * 100; dx = 2; dy = 0; }
+  const getSpawnRate = () => {
+    if (timeLeft > 10) return 1000; // Easy
+    if (timeLeft > 5) return 700;   // Medium
+    return 500;                      // Hard
+  };
 
-      setHands(prev => [...prev, { id: Date.now(), x, y, dx, dy }]);
-    }, 1000);
+  const spawnHand = setInterval(() => {
+    const side = Math.floor(Math.random() * 4);
+    let x, y, dx, dy;
+    
+    const speed = timeLeft > 8 ? 2 : timeLeft > 4 ? 2.5 : 3; // Speed increases
+    
+    if (side === 0) { x = Math.random() * 100; y = -10; dx = 0; dy = speed; }
+    else if (side === 1) { x = 110; y = Math.random() * 100; dx = -speed; dy = 0; }
+    else if (side === 2) { x = Math.random() * 100; y = 110; dx = 0; dy = -speed; }
+    else { x = -10; y = Math.random() * 100; dx = speed; dy = 0; }
+
+    setHands(prev => [...prev, { id: Date.now(), x, y, dx, dy }]);
+    }, getSpawnRate());
 
     return () => clearInterval(spawnHand);
-  }, [gameActive]);
+  }, [gameActive, timeLeft]); // Added timeLeft dependency
 
   useEffect(() => {
     if (!gameActive) return;
@@ -263,13 +249,16 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
   }, [gameActive, timeLeft]);
 
   if (selectedPath) {
-    return (
-      <div className="screen">
-        <div className="content-box">
-          <div className="section-header" style={{ borderColor: selectedPath.color }}>
-            <div className="icon-large">{selectedPath.image}</div>
-            <h2>{selectedPath.label}</h2>
-          </div>
+      return (
+        <div className="screen">
+          <div className="content-box">
+            <div className="info-panel">
+              {selectedPath.bgImage && (
+                <img 
+                  src={selectedPath.bgImage} 
+                />
+              )}
+            </div>
 
           <div className="notepad-container">
             {selectedPath.facts.map((fact: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, i: Key | null | undefined) => (
@@ -281,10 +270,10 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
 
           <div className="nav-buttons">
             <Button onClick={() => { setSelectedPath(null); }} variant="outline" className="retro-btn-outline">
-              ← Choose Another Fate
+              ← new choice
             </Button>
             <Button onClick={onComplete} className="main-btn">
-              Let's rewind... →
+              let's rewind ... →
             </Button>
           </div>
         </div>
@@ -297,11 +286,10 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
       <div className="screen">
         <div className="content-box">
           <div className="caught-banner">
-            <h2>You've been discarded!</h2>
             <p className="narrative">{content.clothing.intro}</p>
           </div>
           
-          <h3 className="choices-title">Where do you go?</h3>
+          <h3 className="choices-title">where do you go?</h3>
           <div className="choices-grid">
             {content.clothing.choices.map((choice) => (
               <Card 
@@ -310,13 +298,20 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
                 style={{ borderTopColor: choice.color }}
                 onClick={() => setSelectedPath(choice)}
               >
-                <div className="choice-icon">{choice.image}</div>
+                {choice.bgImage ? (
+                  <div 
+                    className="choice-mini-image"
+                    style={{ backgroundImage: `url(${choice.bgImage})` }}
+                  />
+                ) : (
+                  <div className="choice-icon">{choice.image}</div>
+                )}
                 <h4>{choice.label}</h4>
               </Card>
             ))}
           </div>
 
-          <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← Back</Button>
+          <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← back</Button>
         </div>
       </div>
     );
@@ -348,7 +343,7 @@ function ClothingJourney({ onComplete, onBack }: ClothingJourneyProps) {
           ))}
         </div>
 
-        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← Back</Button>
+        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← back</Button>
       </div>
     </div>
   );
@@ -399,7 +394,7 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
       <div className="screen">
         <div className="content-box">
           <div className={`result-banner ${success ? 'success' : 'failure'}`}>
-            <h2>{success ? '✓ Quota Met' : '✗ Quota Failed'}</h2>
+            <h2>{success ? '✓ Quota: MET' : '✗ Quota: FAILED'}</h2>
             <p>{success 
               ? `You made ${clicks} items. You'll receive your full ${wage} today.`
               : `You only made ${clicks}/${target} items. Your wage will be docked.`
@@ -407,7 +402,7 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
           </div>
 
           <div className="ticker-container">
-            <div className="ticker-label">REALITY CHECK:</div>
+            <div className="ticker-label">What else do we know about clothing factories like Imperial Garments?</div>
             <div className="ticker-facts">
               {facts.map((fact, i) => (
                 <div key={i} className="ticker-item">
@@ -418,9 +413,9 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
           </div>
 
           <div className="nav-buttons">
-            <Button onClick={onBack} variant="outline" className="retro-btn-outline">← Back</Button>
+            <Button onClick={onBack} variant="outline" className="retro-btn-outline">← back</Button>
             <Button onClick={onComplete} className="main-btn">
-              The real price tag... →
+              the price tag of sustainability... →
             </Button>
           </div>
         </div>
@@ -429,9 +424,18 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
   }
 
   return (
-    <div className="screen">
-      <div className="content-box">
-        <p className="narrative">{content.worker.intro}</p>
+  <div className="screen">
+    <div className="content-box">
+      {content.worker.bgImage && (
+        <div className="worker-image-container">
+          <img 
+            src={content.worker.bgImage} 
+            alt="Factory floor"
+            className="worker-background-image"
+          />
+        </div>
+      )}
+      <p className="narrative">{content.worker.intro}</p>
         
         <div className="clicker-game">
           <div className="clicker-stats">
@@ -460,71 +464,127 @@ function WorkerReality({ onComplete, onBack }: WorkerRealityProps) {
           </div>
 
           <button className="clicker-button" onClick={handleClick}>
-            <span className="clicker-icon">🧵</span>
             <span className="clicker-text">SEW GARMENT</span>
           </button>
 
-          <div className="fact-ticker">
-            <div className="fact-ticker-content">
-              {facts[currentFact]}
-            </div>
-          </div>
+          <button 
+            className="skip-button" 
+            onClick={() => setGameOver(true)}
+            title="Skip for demo purposes"
+          >
+            skip (demo)
+          </button>
         </div>
 
-        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← Back</Button>
+        <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">← back</Button>
       </div>
     </div>
   );
 }
 
-function StudentDilemma({ onComplete, onBack }: StudentDilemmaProps) {
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-  const { budget, items } = content.student;
+function StudentDilemma({ onComplete, onBack }: { onComplete: () => void; onBack: () => void }) {
+  const [selectedComparison, setSelectedComparison] = useState<'price' | 'durability' | 'impact' | null>(null);
+
+  const fastFashion = {
+    name: 'sweater from CIDER',
+    price: 12.99,
+    wears: 10,
+    costPerWear: 1.29,
+    impact: 'Unethical sourcing, high waste',
+    lifespan: '2 monts',
+    emoji: '👚',
+    image: ciderSweater,
+    color: '#FF6B6B'
+  };
+
+  const sustainable = {
+    name: 'sweater from EVERLANE',
+    price: 178.00,
+    wears: 200,
+    costPerWear: 0.89,
+    impact: 'Brand dedicated to 100% transparency and ethical / sustainable sourcing & production',
+    lifespan: '3+ years',
+    image: everlaneSweater,
+    emoji: '🌿',
+    color: '#51CF66'
+  };
 
   return (
     <div className="screen">
       <div className="content-box">
         <p className="narrative">{content.student.intro}</p>
         
-        <div className="shop-header">
-          <h3>💰 Your Budget: ${budget}</h3>
-        </div>
-
-        <div className="shop-grid">
-          {items.map((item, i) => (
-            <Card 
-              key={i}
-              className={`shop-card retro-card ${item.price > budget ? 'unaffordable' : ''} ${selectedItem === i ? 'selected' : ''}`}
-              onClick={() => item.price <= budget && setSelectedItem(i)}
-              style={{ borderTopColor: item.color, borderTopWidth: '5px' }}
-            >
-              <div className="shop-icon">{item.emoji}</div>
-              <h4>{item.name}</h4>
-              <div className="shop-price">${item.price}</div>
-              <div className="shop-details">
-                <p><strong>Durability:</strong> {item.durability}</p>
-                <p><strong>Impact:</strong> {item.impact}</p>
-                {item.note && <p className="note">{item.note}</p>}
+        <div className="compare-container">
+          <div className="compare-card" style={{ borderTopColor: fastFashion.color }}>
+          {fastFashion.image ? (
+            <div 
+              className="compare-image"
+              style={{ backgroundImage: `url(${fastFashion.image})` }}
+            />
+          ) : (
+            <div className="compare-emoji">{fastFashion.emoji}</div>
+          )}
+            
+            <h4>{fastFashion.name}</h4>
+            <div className="compare-price">${fastFashion.price}</div>
+            
+            <div className="compare-stats">
+              <div className="compare-stat">
+                <strong>Lifespan:</strong> {fastFashion.lifespan}
               </div>
-              {item.price > budget && (
-                <div className="unaffordable-overlay">
-                  OUT OF BUDGET
-                </div>
-              )}
-            </Card>
-          ))}
+              <div className="compare-stat">
+                <strong>Estimated wears before damage: </strong> ~{fastFashion.wears}
+              </div>
+              <div className="compare-stat">
+                <strong>Cost per wear:</strong> ${fastFashion.costPerWear}
+              </div>
+              <div className="compare-stat">
+                <strong>Notes:</strong> {fastFashion.impact}
+              </div>
+            </div>
+          </div>
+
+          <div className="compare-vs">VS</div>
+
+          <div className="compare-card" style={{ borderTopColor: sustainable.color }}>
+          {sustainable.image ? (
+            <div 
+              className="compare-image"
+              style={{ backgroundImage: `url(${sustainable.image})` }}
+            />
+          ) : (
+            <div className="compare-emoji">{sustainable.emoji}</div>
+          )}
+            <h4>{sustainable.name}</h4>
+            <div className="compare-price">${sustainable.price}</div>
+            
+            <div className="compare-stats">
+              <div className="compare-stat">
+                <strong>Lifespan:</strong> {sustainable.lifespan}
+              </div>
+              <div className="compare-stat">
+                <strong>Estimated wears before damage: </strong> ~{sustainable.wears}
+              </div>
+              <div className="compare-stat">
+                <strong>Cost per wear:</strong> ${sustainable.costPerWear}
+              </div>
+              <div className="compare-stat">
+                <strong>Notes:</strong> {sustainable.impact}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {selectedItem !== null && (
-          <Card className="insight-card retro-card">
-            <p>💭 This is the reality for millions: ethical choices require financial privilege.</p>
-          </Card>
-        )}
+        <div className="compare-insight">
+          <h4>💡 pricing reality </h4>
+          <p>The sustainable brand costs <strong>13x more upfront</strong> but could last <strong>20x longer</strong>. 
+          Over time, you actually save money—but only if you can afford the initial price. The reality is that, in today's society, <strong>ethical choices require financial privilege that millions don't have.</strong></p>
+        </div>
 
         <div className="nav-buttons">
-          <Button onClick={onBack} variant="outline" className="retro-btn-outline">← Back</Button>
+          <Button onClick={onBack} variant="outline" className="retro-btn-outline">← back</Button>
           <Button onClick={onComplete} className="main-btn">
-            So what now? →
+            continue →
           </Button>
         </div>
       </div>
@@ -532,46 +592,84 @@ function StudentDilemma({ onComplete, onBack }: StudentDilemmaProps) {
   );
 }
 
-function Conclusion({ onBack }: { onBack: () => void }) {
-  const [timeSpent, setTimeSpent] = useState(0);
+function Conclusion({ onBack, startTime }: { onBack: () => void; startTime: number }) {
+  const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
+  const timeSpentMinutes = (timeSpentSeconds / 60).toFixed(1);
 
-  useEffect(() => {
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      setTimeSpent(Math.floor((Date.now() - startTime) / 1000));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // Global statistics (per minute)
+  const clothingPerMinute = 0.73; // tons discarded globally
+  const waterPerShirt = 2700; // liters
+  const shirtsProducedPerMinute = 100000; // approximate global production
 
-  const clothingWasted = (timeSpent / 60 * content.conclusion.stats.clothingDiscarded).toFixed(2);
+  // Calculate impacts during user's time
+  const clothingWasted = (parseFloat(timeSpentMinutes) * clothingPerMinute).toFixed(2);
+  const waterUsed = (parseFloat(timeSpentMinutes) * shirtsProducedPerMinute * waterPerShirt / 1000000).toFixed(1); // in millions of liters
+  const shirtsProduced = Math.floor(parseFloat(timeSpentMinutes) * shirtsProducedPerMinute);
 
   return (
     <div className="screen">
       <div className="content-box conclusion-box">
-        <h2 className="conclusion-title">{content.conclusion.title}</h2>
         
         <div className="stats-display">
-          <h3>While You Were Here...</h3>
-          <div className="stat-item">
-            <div className="stat-value">{clothingWasted}</div>
-            <div className="stat-label">tons of clothing were discarded globally</div>
+          <h3>while you were here ({timeSpentMinutes} minutes)...</h3>
+          
+          <div className="stats-grid">
+            <div className="stat-item">
+              <div className="stat-icon">🗑️</div>
+              <div className="stat-value">{clothingWasted}</div>
+              <div className="stat-label">tons of clothing discarded globally*</div>
+            </div>
+            
+            <div className="stat-item">
+              <div className="stat-icon">💧</div>
+              <div className="stat-value">{waterUsed}M</div>
+              <div className="stat-label">liters of water used in production**</div>
+            </div>
+            
+            <div className="stat-item">
+              <div className="stat-icon">👕</div>
+              <div className="stat-value">{shirtsProduced.toLocaleString()}</div>
+              <div className="stat-label">new garments produced worldwide***</div>
+            </div>
           </div>
-          <div className="stat-item">
-            <div className="stat-value">{timeSpent}</div>
-            <div className="stat-label">seconds you spent learning</div>
+          
+          <div className="stat-citations">
+            <p>* Based on 80 lbs/person/year average (Green City Recycler)</p>
+            <p>** Each garment uses ~2,700 liters of water (Navarro, MIT 2021)</p>
+            <p>*** Estimated from global production rates (~100B garments/year)</p>
           </div>
         </div>
 
-        <p className="final-text">{content.conclusion.body}</p>
+        {/* CONCLUSION */}
+
+        <div className="conclusion-cta">
+          <h3>What we can we do?</h3>
+          <div className="action-items">
+            <div className="action-item">
+              <p><strong>🔍 Research brands</strong> as much as possible before you buy. Look for transparency in supply chains if you can afford to do so.</p> <p> </p>
+            </div>
+            <div className="action-item">
+              <p><strong>♻️ Buy secondhand</strong> when possible. Every thrifted / recovered item expands the global lifespan of clothing.</p>
+            </div>
+            <div className="action-item">
+              <p><strong>📢 Demand change</strong> from policymakers. Join local events to raise awareness towards these issues.</p>
+            </div>
+            <div className="action-item">
+            </div>
+          </div>
+          
+          <div className="final-message">
+          </div>
+        </div>
+
+        {/* END CONCLUSION */}
         
         <div className="credits">
-          <p><strong>An interactive exploration by Afomia Mesfin</strong></p>
-          <p>Based on "Fast vs Sustainable Fashion: Ethics and Elitism"</p>
-          <p className="small">WRIT 1301 - Mode Change Project</p>
+          <p className="small"> Afomia Mesfin - WRIT 1301 - Mode Change Project</p>
         </div>
 
         <Button onClick={onBack} variant="outline" className="back-btn retro-btn-outline">
-          ← Back to Start
+          ← back to start!
         </Button>
       </div>
     </div>
@@ -583,7 +681,8 @@ function Conclusion({ onBack }: { onBack: () => void }) {
 export default function App() {
   const [stage, setStage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
+  const [startTime] = useState(Date.now()); // Track start time
+  
   const goToStage = (n: number) => {
     playSound('transition');
     setIsTransitioning(true);
@@ -686,9 +785,9 @@ export default function App() {
         .progress-tracker {
           position: fixed;
           top: 0;
-          left: 0;
+          left: 0;s
           width: 100%;
-          height: 6px;
+          height: 20px;
           background: #e0e0e0;
           z-index: 1000;
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -710,8 +809,8 @@ export default function App() {
         }
 
         .progress-step {
-          width: 12px;
-          height: 12px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           background: #e0e0e0;
           border: 2px solid #2d2d2d;
@@ -808,6 +907,7 @@ export default function App() {
           transition: all 0.2s;
           font-weight: 600;
           box-shadow: 4px 4px 0 rgba(45, 106, 79, 0.3);
+          border-radius: 8px;
         }
 
         .main-btn:hover {
@@ -816,7 +916,7 @@ export default function App() {
         }
 
         .retro-btn-outline {
-          border: 2px solid #2d2d2d;
+          border: none
           background: transparent;
           color: #2d2d2d;
           border-radius: 8px;
@@ -828,6 +928,7 @@ export default function App() {
 
         .back-btn {
           margin-top: 20px;
+          margin-left: 20px;
         }
 
         .nav-buttons {
@@ -855,6 +956,7 @@ export default function App() {
           font-weight: bold;
           border: 2px solid #2d2d2d;
           margin-bottom: 10px;
+          border-radius: 8px;
         }
 
         .game-instructions {
@@ -894,13 +996,23 @@ export default function App() {
           background: #fff3cd;
           border: 3px solid #ffc107;
           margin-bottom: 30px;
+          border-radius: 12px;
         }
 
         .choices-title {
           text-align: center;
-          text-transform: uppercase;
           letter-spacing: 1px;
           color: #2d6a4f;
+        }
+
+        .choice-mini-image {
+          width: 100%;
+          height: 120px;
+          background-size: cover;
+          background-position: center;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          border: 2px solid rgba(0,0,0,0.1);
         }
 
         .choices-grid {
@@ -927,6 +1039,21 @@ export default function App() {
         .choice-icon {
           font-size: 3.5rem;
           margin-bottom: 15px;
+        }
+
+        .info-panel-header {
+          padding: 20px 30px;
+          background: #2d6a4f;
+          color: white;
+          text-align: center;
+          border-bottom: 2px dashed #d4af37;
+          margin-bottom: 20px;
+        }
+
+        .info-panel-header h2 {
+          color: white;
+          margin: 0;
+          font-size: 1.8rem;
         }
 
         .section-header {
@@ -975,6 +1102,7 @@ export default function App() {
         }
 
         .notepad-item {
+          padding-top: 5px;
           padding-left: 20px;
           margin-bottom: 10px;
           font-size: 1.05rem;
@@ -999,6 +1127,7 @@ export default function App() {
           border: 3px solid #2d2d2d;
           min-width: 180px;
           box-shadow: 4px 4px 0 rgba(45, 45, 45, 0.2);
+          border-radius: 12px;
         }
 
         .stat-label {
@@ -1025,9 +1154,10 @@ export default function App() {
 
         .progress-bar {
           background: #e0e0e0;
-          height: 35px;
+          height: 50px;
           border: 2px solid #2d2d2d;
           overflow: hidden;
+          border-radius: 8px;
         }
 
         .progress-fill {
@@ -1057,6 +1187,7 @@ export default function App() {
           display: inline-flex;
           align-items: center;
           gap: 15px;
+          border-radius: 12px;
         }
 
         .clicker-button:hover {
@@ -1083,6 +1214,7 @@ export default function App() {
           display: flex;
           align-items: center;
           justify-content: center;
+          border-radius: 12px;
         }
 
         .fact-ticker-content {
@@ -1096,6 +1228,7 @@ export default function App() {
           border: 3px solid #2d2d2d;
           margin-bottom: 30px;
           text-align: center;
+          border-radius: 12px;
         }
 
         .result-banner.success {
@@ -1112,6 +1245,7 @@ export default function App() {
           margin: 30px 0;
           border: 2px solid #2d2d2d;
           overflow: hidden;
+          border-radius: 12px;
         }
 
         .ticker-label {
@@ -1121,6 +1255,41 @@ export default function App() {
           font-weight: bold;
           letter-spacing: 2px;
           font-size: 0.9rem;
+        }
+
+        .skip-button {
+          background: #666;
+          color: white;
+          border: 2px solid #2d2d2d;
+          padding: 10px 20px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          margin: 10px;
+          font-weight: 600;
+          transition: all 0.2s;
+          border-radius: 8px;
+          opacity: 0.7;
+        }
+
+        .skip-button:hover {
+          opacity: 1;
+          background: #555;
+        }
+
+        .worker-image-container {
+          width: 100%;
+          height: 250px;
+          overflow: hidden;
+          border-radius: 12px;
+          margin-bottom: 25px;
+          border: 3px solid #2d2d2d;
+        }
+
+        .worker-background-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: brightness(0.9);
         }
 
         .ticker-facts {
@@ -1145,6 +1314,99 @@ export default function App() {
           margin-right: 10px;
         }
 
+        .compare-image {
+          width: 50%;
+          height: 250px;
+          background-size: cover;
+          background-position: center;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .compare-container {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          gap: 20px;
+          align-items: center;
+          margin: 30px 0;
+        }
+
+        .compare-card {
+          background: white;
+          border: 2px solid #2d2d2d;
+          border-top-width: 5px;
+          border-radius: 12px;
+          padding: 25px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          text-align: center;
+        }
+
+        .compare-emoji {
+          font-size: 4rem;
+          margin-bottom: 15px;
+        }
+
+        .compare-price {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #2d6a4f;
+          margin: 15px 0;
+        }
+
+        .compare-stats {
+          text-align: left;
+          margin-top: 20px;
+        }
+
+        .compare-stat {
+          padding: 10px 0;
+          border-bottom: 1px dashed #e0e0e0;
+          font-size: 0.95rem;
+        }
+
+        .compare-stat:last-child {
+          border-bottom: none;
+        }
+
+        .compare-vs {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #2d6a4f;
+          background: #f0f0f0;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid #2d2d2d;
+        }
+
+        .compare-insight {
+          background: #d8f3dc;
+          border: 2px dashed #2d6a4f;
+          border-radius: 12px;
+          padding: 25px;
+          margin: 30px 0;
+          border-radius: 12px;
+        }
+
+        .compare-insight h4 {
+          color: #2d6a4f;
+          margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+          .compare-container {
+            grid-template-columns: 1fr;
+          }
+          
+          .compare-vs {
+            transform: rotate(90deg);
+          }
+        }
+
         .shop-header {
           text-align: center;
           margin-bottom: 30px;
@@ -1153,6 +1415,7 @@ export default function App() {
           color: white;
           border: 3px solid #2d2d2d;
           box-shadow: 4px 4px 0 rgba(45, 45, 45, 0.2);
+          border-radius: 12px;
         }
 
         .shop-grid {
@@ -1281,16 +1544,67 @@ export default function App() {
         .stats-display {
           background: #2d6a4f;
           color: white;
-          padding: 30px;
+          padding: 35px;
           border-radius: 12px;
           margin: 30px 0;
-          text-align: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .stats-display h3 {
           color: white;
-          margin-bottom: 20px;
+          margin-bottom: 30px;
           font-size: 1.5rem;
+          text-align: center;
+          border-bottom: 2px solid rgba(255,255,255,0.3);
+          padding-bottom: 15px;
+        }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 25px;
+          margin-bottom: 25px;
+        }
+
+        .stat-item {
+          text-align: center;
+          padding: 20px;
+          background: rgba(255,255,255,0.1);
+          border-radius: 8px;
+          border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-icon {
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+        }
+
+        .stat-value {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #95d5b2;
+          margin: 10px 0;
+        }
+
+        .stat-label {
+          font-size: 0.9rem;
+          opacity: 0.95;
+          line-height: 1.4;
+        }
+
+        .stat-citations {
+          background: rgba(0,0,0,0.2);
+          padding: 15px;
+          border-radius: 8px;
+          border-left: 4px solid #95d5b2;
+          text-align: left;
+        }
+
+        .stat-citations p {
+          font-size: 0.85rem;
+          margin: 5px 0;
+          opacity: 0.9;
+          font-style: italic;
         }
 
         .stat-item {
@@ -1313,7 +1627,6 @@ export default function App() {
       {stage === 1 && <ClothingJourney onComplete={() => goToStage(2)} onBack={() => goToStage(0)} />}
       {stage === 2 && <WorkerReality onComplete={() => goToStage(3)} onBack={() => goToStage(1)} />}
       {stage === 3 && <StudentDilemma onComplete={() => goToStage(4)} onBack={() => goToStage(2)} />}
-      {stage === 4 && <Conclusion onBack={() => goToStage(0)} />}
-    </div>
+      {stage === 4 && <Conclusion onBack={() => goToStage(0)} startTime={startTime} />}    </div>
   );
 }
